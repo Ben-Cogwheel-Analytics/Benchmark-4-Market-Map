@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
@@ -14,95 +14,100 @@
 <body>
     <div id="map"></div>
     <img id="logo" src="https://cogwheelanalytics.com/assets/2024/10/Cogwheel-Analytics-Logo.webp" alt="Cogwheel Analytics" />
+
+    <script>
+        var cwMap = L.map('map', {
+            center: [39.5, -98.35],
+            zoom: 4,
+            zoomControl: true
+        });
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Data by &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
+            maxZoom: 18
+        }).addTo(cwMap);
+
+        var pinIcon = L.icon({
+            iconUrl: 'data:image/png;base64,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',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41]
+        });
+
+        // To add or remove a market, edit this list only.
+        var markets = [
+            ["Phoenix, AZ",        33.4484, -112.0740],
+            ["Flagstaff, AZ",      35.1983, -111.6513],
+            ["Los Angeles, CA",    34.0522, -118.2437],
+            ["Riverside, CA",      33.9806, -117.3755],
+            ["Sacramento, CA",     38.5816, -121.4944],
+            ["San Diego, CA",      32.7157, -117.1611],
+            ["San Francisco, CA",  37.7749, -122.4194],
+            ["San Jose, CA",       37.3382, -121.8863],
+            ["Boulder, CO",        40.0150, -105.2705],
+            ["Denver, CO",         39.7392, -104.9903],
+            ["Fort Collins, CO",   40.5853, -105.0844],
+            ["Norwich, CT",        41.5243,  -72.0759],
+            ["Washington, DC",     38.9072,  -77.0369],
+            ["Jacksonville, FL",   30.3322,  -81.6557],
+            ["Key West, FL",       24.5551,  -81.7800],
+            ["Miami, FL",          25.7617,  -80.1918],
+            ["Orlando, FL",        28.5383,  -81.3792],
+            ["Tampa, FL",          27.9506,  -82.4572],
+            ["Atlanta, GA",        33.7490,  -84.3880],
+            ["Chicago, IL",        41.8781,  -87.6298],
+            ["Indianapolis, IN",   39.7684,  -86.1581],
+            ["New Orleans, LA",    29.9511,  -90.0715],
+            ["Boston, MA",         42.3601,  -71.0589],
+            ["Baltimore, MD",      39.2904,  -76.6122],
+            ["Salisbury, MD",      38.3607,  -75.5994],
+            ["Detroit, MI",        42.3314,  -83.0458],
+            ["Minneapolis, MN",    44.9778,  -93.2650],
+            ["Kansas City, MO",    39.0997,  -94.5786],
+            ["Charlotte, NC",      35.2271,  -80.8431],
+            ["Greensboro, NC",     36.0726,  -79.7920],
+            ["Omaha, NE",          41.2565,  -95.9345],
+            ["New York, NY",       40.7128,  -74.0060],
+            ["Portland, OR",       45.5051, -122.6750],
+            ["Philadelphia, PA",   39.9526,  -75.1652],
+            ["Pittsburgh, PA",     40.4406,  -79.9959],
+            ["Providence, RI",     41.8240,  -71.4128],
+            ["Memphis, TN",        35.1495,  -90.0490],
+            ["Nashville, TN",      36.1627,  -86.7816],
+            ["Austin, TX",         30.2672,  -97.7431],
+            ["Dallas, TX",         32.7767,  -96.7970],
+            ["Houston, TX",        29.7604,  -95.3698],
+            ["Salt Lake City, UT", 40.7608, -111.8910],
+            ["Richmond, VA",       37.5407,  -77.4360],
+            ["Portland, ME",       43.6591,  -70.2568],
+            ["Spokane, WA",        47.6588, -117.4260]
+        ];
+
+        markets.forEach(function(m) {
+            L.marker([m[1], m[2]], { icon: pinIcon })
+                .bindPopup('<div style="font-size:14px;">' + m[0] + '</div>')
+                .addTo(cwMap);
+        });
+
+        var infoHtml = [
+            '<div style="background-color:white; border:2px solid #4B2E83; padding:15px; font-size:14px; width:250px;">',
+            '<b style="color:#4B2E83;">Benchmark 4 Market Map</b><br>',
+            '<p style="margin:5px 0;">',
+            'Compare your hotel&#39;s performance against hotels in the same market.<br>',
+            'Available in ' + markets.length + ' markets.<br>',
+            'All hotel types included.',
+            '</p>',
+            '<b style="color:#4B2E83;">Contact:</b> sales@cogwheelmarketing.com<br>',
+            '<b>Website:</b> www.cogwheelanalytics.com',
+            '</div>'
+        ].join('');
+
+        var infoBox = L.divIcon({
+            className: 'empty',
+            html: infoHtml,
+            iconSize: [300, 100],
+            iconAnchor: [0, 0]
+        });
+        L.marker([35.0, -75.0], { icon: infoBox }).addTo(cwMap);
+    </script>
 </body>
-<script>
-    var map = L.map('map', {
-        center: [39.5, -98.35],
-        zoom: 4,
-        zoomControl: true
-    });
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: 'Data by &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
-        maxZoom: 18
-    }).addTo(map);
-
-    var pinIcon = L.icon({
-        iconUrl: 'data:image/png;base64,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',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41]
-    });
-
-    // To add or remove a market, edit this list only.
-    var markets = [
-        ["Phoenix, AZ",        33.4484, -112.0740],
-        ["Flagstaff, AZ",      35.1983, -111.6513],
-        ["Los Angeles, CA",    34.0522, -118.2437],
-        ["Riverside, CA",      33.9806, -117.3755],
-        ["Sacramento, CA",     38.5816, -121.4944],
-        ["San Diego, CA",      32.7157, -117.1611],
-        ["San Francisco, CA",  37.7749, -122.4194],
-        ["San Jose, CA",       37.3382, -121.8863],
-        ["Boulder, CO",        40.0150, -105.2705],
-        ["Denver, CO",         39.7392, -104.9903],
-        ["Fort Collins, CO",   40.5853, -105.0844],
-        ["Norwich, CT",        41.5243,  -72.0759],
-        ["Washington, DC",     38.9072,  -77.0369],
-        ["Jacksonville, FL",   30.3322,  -81.6557],
-        ["Key West, FL",       24.5551,  -81.7800],
-        ["Miami, FL",          25.7617,  -80.1918],
-        ["Orlando, FL",        28.5383,  -81.3792],
-        ["Tampa, FL",          27.9506,  -82.4572],
-        ["Atlanta, GA",        33.7490,  -84.3880],
-        ["Chicago, IL",        41.8781,  -87.6298],
-        ["Indianapolis, IN",   39.7684,  -86.1581],
-        ["New Orleans, LA",    29.9511,  -90.0715],
-        ["Boston, MA",         42.3601,  -71.0589],
-        ["Baltimore, MD",      39.2904,  -76.6122],
-        ["Salisbury, MD",      38.3607,  -75.5994],
-        ["Detroit, MI",        42.3314,  -83.0458],
-        ["Minneapolis, MN",    44.9778,  -93.2650],
-        ["Kansas City, MO",    39.0997,  -94.5786],
-        ["Charlotte, NC",      35.2271,  -80.8431],
-        ["Greensboro, NC",     36.0726,  -79.7920],
-        ["Omaha, NE",          41.2565,  -95.9345],
-        ["New York, NY",       40.7128,  -74.0060],
-        ["Portland, OR",       45.5051, -122.6750],
-        ["Philadelphia, PA",   39.9526,  -75.1652],
-        ["Pittsburgh, PA",     40.4406,  -79.9959],
-        ["Providence, RI",     41.8240,  -71.4128],
-        ["Memphis, TN",        35.1495,  -90.0490],
-        ["Nashville, TN",      36.1627,  -86.7816],
-        ["Austin, TX",         30.2672,  -97.7431],
-        ["Dallas, TX",         32.7767,  -96.7970],
-        ["Houston, TX",        29.7604,  -95.3698],
-        ["Salt Lake City, UT", 40.7608, -111.8910],
-        ["Richmond, VA",       37.5407,  -77.4360],
-        ["Portland, ME",       43.6591,  -70.2568],
-        ["Spokane, WA",        47.6588, -117.4260]
-    ];
-
-    markets.forEach(function(m) {
-        L.marker([m[1], m[2]], { icon: pinIcon })
-            .bindPopup('<div style="font-size:14px;">' + m[0] + '</div>')
-            .addTo(map);
-    });
-
-    var infoBox = L.divIcon({
-        className: 'empty',
-        html: '<div style="background-color:white; border:2px solid #4B2E83; padding:15px; font-size:14px; width:250px;">' +
-                '<b style="color:#4B2E83;">Benchmark 4 Market Map</b><br>' +
-                '<p style="margin:5px 0;">' +
-                  ‘Compare your hotel’s performance against hotels in the same market.<br>' +
-                  'Available in ' + markets.length + ' markets.<br>' +
-                  'All hotel types included.' +
-                '</p>' +
-                '<b style="color:#4B2E83;">Contact:</b> sales@cogwheelmarketing.com<br>' +
-                '<b>Website:</b> www.cogwheelanalytics.com' +
-              '</div>',
-        iconSize: [300, 100],
-        iconAnchor: [0, 0]
-    });
-    L.marker([35.0, -75.0], { icon: infoBox }).addTo(map);
-</script>
 </html>
