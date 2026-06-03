@@ -31,11 +31,16 @@ cd C:\Users\Benjg\dev\cogwheel\Benchmark-4-Market-Map
 ```
 
 The script will:
-1. Read DB credentials from `.env`
-2. Query for MSAs with >= 4 active, non-archived, non-demo hotels
-3. Match each MSA to `markets_coords.csv` using the numeric MSA ID
-4. Rewrite the `var markets = [...]` array in `index.html`
-5. Git commit and push — GitHub Pages redeploys automatically
+1. Pull latest `main` from GitHub
+2. Read DB credentials from `.env`
+3. Query for MSAs with >= 4 active, non-archived, non-demo hotels
+4. Match each MSA to `markets_coords.csv` using the numeric MSA ID
+5. Rewrite the `var markets = [...]` array in `index.html`
+6. Create a dated branch, commit, and open a PR
+7. Print the PR URL — review and merge to publish
+
+**Main branch is protected** — direct pushes are blocked. All changes
+go through a PR with at least 1 approval required.
 
 ---
 
@@ -98,6 +103,10 @@ Source: `cogwheel_analytics/apps/crud/msa.py`
 - This is a **public** GitHub repo (GitHub Pages requirement)
 - Never hardcode credentials anywhere in the repo
 - `.venv/` is also gitignored
+- Leaflet loaded from unpkg with SRI integrity hashes (1.9.4)
+- Popup uses `textContent` (not innerHTML) — XSS safe
+- Market names are `html.escape()` + `json.dumps()` sanitised in the script
+- Main branch is protected: PRs + 1 approval required before merge
 
 ---
 
