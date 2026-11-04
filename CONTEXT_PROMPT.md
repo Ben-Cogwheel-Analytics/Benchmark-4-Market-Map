@@ -33,7 +33,7 @@ cd C:\Users\Benjg\dev\cogwheel\Benchmark-4-Market-Map
 The script will:
 1. Pull latest `main` from GitHub
 2. Read DB credentials from `.env`
-3. Query for MSAs with >= 4 active, non-archived, non-demo hotels
+3. Query for MSAs with >= 4 qualifying hotels (see Eligibility Rules)
 4. Match each MSA to `markets_coords.csv` using the numeric MSA ID
 5. Rewrite the `var markets = [...]` array in `index.html`
 6. Create a dated branch, commit, and open a PR
@@ -67,11 +67,15 @@ Then re-run the script.
 A market appears on the map if:
 - `hotel.is_active = TRUE`
 - `hotel.is_archive = FALSE` (or NULL)
-- `enterprise.name NOT IN ('Archive', 'Duplicate')`
+- `hotel.code !~* '_vanity$'` (vanity entities excluded, any case; added 2026-11-04)
+- `enterprise.status = TRUE` (churned enterprises excluded; added 2026-11-04)
+- `enterprise.name NOT ILIKE 'archive'` and `NOT ILIKE 'duplicate%'` (the real enterprise is named "Duplicates")
 - Enterprise UUID `2c77d12c-4534-42d3-8cd9-e9432c3dcdd5` excluded (demo)
 - Market has **>= 4 distinct hotels** meeting the above criteria
 
-Source: `cogwheel_analytics/apps/crud/msa.py`
+Base logic from `cogwheel_analytics/apps/crud/msa.py`. The app's own query does
+not exclude vanity entities or churned enterprises; the map does, so it never
+counts the same property twice. Keep these filters on every update.
 
 ---
 

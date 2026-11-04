@@ -11,7 +11,7 @@ Setup:
 
 The script will:
     - Pull latest main from GitHub
-    - Query the DB for MSAs with >= 4 active hotels
+    - Query the DB for MSAs with >= 4 qualifying hotels (see fetch_markets)
     - Match each MSA to a coordinate in markets_coords.csv
     - Rewrite the markets array in index.html
     - Open a PR for review (GitHub Pages redeploys on merge)
@@ -47,7 +47,14 @@ def load_coords() -> dict:
 
 
 def fetch_markets(conn) -> list[dict]:
-    """Return MSAs with >= MIN_HOTELS active, non-demo hotels."""
+    """Return MSAs with >= MIN_HOTELS qualifying hotels.
+
+    A hotel qualifies when it is active and not archived, is not a soft-brand
+    vanity entity (code ending in _VANITY, any case: the same property as its
+    brand twin), and belongs to an active enterprise other than the demo,
+    Archive, or Duplicates enterprises.
+    """
+    # %% is a literal percent sign because the query takes psycopg2 parameters.
     query = """
         SELECT
             m.msa_id,
@@ -60,11 +67,14 @@ def fetch_markets(conn) -> list[dict]:
         JOIN enterprise e         ON e.id           = hel.enterprise_id
         WHERE h.is_active = TRUE
           AND COALESCE(h.is_archive, FALSE) = FALSE
+          AND h.code !~* '_vanity$'
+          AND e.status = TRUE
           AND e.id::text   <> %s
-          AND e.name NOT IN ('Archive', 'Duplicate')
+          AND e.name NOT ILIKE 'archive'
+          AND e.name NOT ILIKE 'duplicate%%'
         GROUP BY m.msa_id, m.name
         HAVING COUNT(DISTINCT h.id) >= %s
-        ORDER BY hotel_count DESC;
+        ORDER BY hotel_count DESC, m.name;
     """
     with conn.cursor() as cur:
         cur.execute(query, (DEMO_ENTERPRISE_ID, MIN_HOTELS))

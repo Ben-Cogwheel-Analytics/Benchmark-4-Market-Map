@@ -10,7 +10,7 @@ An interactive map showing the markets where Cogwheel Analytics' **Benchmark 4 (
 
 The map displays a pin for each supported market. Clicking a pin shows the city and state name. An info box in the lower right shows the total market count, which updates automatically whenever markets are added or removed.
 
-Markets are pulled directly from the Cogwheel Analytics database — any market with **4 or more active hotels** qualifies.
+Markets are pulled directly from the Cogwheel Analytics database. Any market with **4 or more qualifying hotels** (active, not vanity entities, at active client enterprises) is shown.
 
 ---
 
@@ -38,7 +38,7 @@ cd Benchmark-4-Market-Map
 
 The script will:
 1. Pull the latest `main` branch
-2. Query the database for MSAs with ≥ 4 active hotels
+2. Query the database for MSAs with ≥ 4 qualifying hotels (see Market Eligibility Rules)
 3. Update the markets array in `index.html`
 4. Open a pull request for review
 
@@ -96,10 +96,12 @@ Standard geocoding coordinates are fine — exact city center is not required.
 
 ## Market Eligibility Rules
 
-A market is shown on the map if:
-- Hotel is active and not archived
-- Enterprise is not Demo, Archive, or Duplicate
-- The market has **≥ 4 distinct qualifying hotels**
+A market is shown on the map if it has **≥ 4 distinct qualifying hotels**. A hotel qualifies when:
+- It is active and not archived
+- It is **not a vanity entity** (hotel code ending in `_VANITY`, any case). A vanity entity is the soft-brand twin of a hotel already counted, so counting it would count the same property twice.
+- Its enterprise is active (`enterprise.status = true`) and is not the Demo, Archive, or Duplicates enterprise
+
+These rules live in `fetch_markets()` in `update_market_map.py`, so every run applies them. Do not remove the vanity exclusion.
 
 Source logic: `cogwheel_analytics/apps/crud/msa.py`
 
